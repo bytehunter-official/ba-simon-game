@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>西蒙游戏 Simon Game</title>
+    <meta
+      name="description"
+      content="Simon game with a Blue Archive theme, stages, a fun interface, and character voices."
+    />
+    <meta name="keywords" content="Blue Archive, Simon game, web-based game, sequence game, game" />
+    <meta name="author" content="Rezzvy" />
+
+    <link rel="stylesheet" href="./lib/bootstrap-5.3.3-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <div class="container-fluid d-flex flex-column p-0 h-screen">
+      <header>
+        <div class="_wrapper text-bg-dark text-center p-2">
+          <div class="costum-header-width">
+            <div class="mb-1 fw-bold fs-3 letter-spacing">关卡 <span id="current-stage">1</span></div>
+            <div id="stage-completion-bar" class="progress rounded-top-pill" role="progressbar">
+              <div class="progress-bar bg-secondary progress-bar-striped rounded-top-pill mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main>
+        <div class="_wrapper bg-white position-relative h-100">
+          <div id="sequence-play-indicator" class="position-absolute p-2 text-bg-light bg-opacity-75 rounded-2 shadow-sm fw-bold fs-5 text-nowrap">
+            Sensei~ 看清顺序哦！
+          </div>
+          <div id="freezone" class="position-absolute bg-white rounded-circle"></div>
+          <div id="sequence-wrapper" class="row g-0 row-cols-2 h-inherit">
+            <div class="sequence-col position-relative p-2" role="button" data-color="yellow">
+              <div class="sequence-inner-wrap position-relative">
+                <img src="./assets/img/momoi.webp" alt="Momoi Image" />
+              </div>
+            </div>
+            <div class="sequence-col position-relative p-2" role="button" data-color="blue">
+              <div class="sequence-inner-wrap position-relative">
+                <img src="./assets/img/arisu.webp" alt="Arisu Image" />
+              </div>
+            </div>
+            <div class="sequence-col position-relative p-2" role="button" data-color="red">
+              <div class="sequence-inner-wrap position-relative">
+                <img src="./assets/img/iroha.webp" alt="Iroha Image" />
+              </div>
+            </div>
+            <div class="sequence-col position-relative p-2" role="button" data-color="green">
+              <div class="sequence-inner-wrap position-relative">
+                <img src="./assets/img/izuna.webp" alt="Izuna Image" />
+              </div>
+            </div>
+          </div>
+
+          <button id="main-menu-btn" class="btn btn-light position-absolute fw-bold" data-bs-toggle="modal" data-bs-target="#main-menu-modal">
+            主菜单
+          </button>
+        </div>
+      </main>
+
+      <footer>
+        <div class="_wrapper text-bg-dark text-center p-2">
+          <p>Powered by 2025 <a href="https://ww1.html-5.me" class="link-light fw-bold">ByteHunter</a></p>
+        </div>
+      </footer>
+    </div>
+
+    <aside>
+      <div class="modal fade" id="main-menu-modal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-4 fw-bold text-dark">主菜单</h1>
+              <button id="main-menu-close-btn" type="button" class="d-none btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="mb-3">
+                <h2 class="fs-5 mb-3">设置</h2>
+
+                <div class="row row-cols-2 g-2">
+                  <div id="voice-vol-config">
+                    <label class="form-label">角色音量</label>
+                    <div class="badge text-bg-dark">0.3</div>
+                    <input type="range" class="form-range" value="0.3" min="0" max="1" step="0.1" />
+                  </div>
+
+                  <div id="bgm-vol-config">
+                    <label class="form-label">BGM音量</label>
+                    <div class="badge text-bg-dark">0.6</div>
+                    <input type="range" class="form-range" value="0.6" min="0" max="1" step="0.1" />
+                  </div>
+                </div>
+
+                <div id="sequence-delay-config">
+                  <label class="form-label">顺序延时</label>
+                  <div class="badge text-bg-dark">600ms</div>
+                  <input type="range" class="form-range" value="600" min="100" max="1000" step="100" />
+                </div>
+
+                <div>
+                  <label class="form-label">过渡效果选择</label>
+                  <select id="sequence-transition-selection" class="form-select">
+                    <option value="unset">无变换</option>
+                    <option value="linear">线性</option>
+                    <option value="ease">平滑</option>
+                    <option value="ease-in">缓入</option>
+                    <option value="ease-in-out">缓入缓出</option>
+                    <option value="cubic-bezier(0.68, -0.55, 0.27, 1.55)" selected>三次贝塞尔曲线(0.68, -0.55, 0.27, 1.55)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="alert alert-dark mb-2">
+                点击“开始吧！”后，你将在每关看到一组随机演示序列。你需要重复它的顺序并持续进行下去，直到你犯错为止。
+              </div>
+              <button id="main-menu-start-game-btn" class="btn btn-dark fw-bold w-100 mb-1">开始吧！</button>
+              <div class="form-check form-switch">
+                <input id="full-screen-mode" class="form-check-input" type="checkbox" role="switch" />
+                <label class="form-check-label" for="full-screen-mode">全屏选项</label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" id="result-modal" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-4 fw-bold text-dark">结果</h1>
+            </div>
+            <div class="modal-body">
+              <div id="stage-reached" class="p-4 mb-3 text-bg-dark text-center rounded-2">
+                <div class="fw-bold">你败在了关卡</div>
+                <div class="display-1 fw-bold">1</div>
+              </div>
+
+              <div>
+                <h2 class="fs-6 mb-2">正确顺序</h2>
+                <div id="expected-moves" class="moves-box p-2 border d-flex gap-2 overflow-x-auto"></div>
+              </div>
+
+              <div class="mt-2 mb-3">
+                <h2 class="fs-6 mb-2">你的顺序</h2>
+                <div id="player-moves" class="moves-box p-2 border d-flex gap-2 overflow-x-auto"></div>
+              </div>
+
+              <button id="retry-btn" class="btn btn-dark fw-bold w-100 mb-1">再来一次</button>
+              <button id="go-to-main-menu-btn" class="btn btn-outline-dark fw-bold w-100">主菜单</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <div class="d-none">
+      <audio src="./assets/voice/momoi.mp3" data-audio="yellow"></audio>
+      <audio src="./assets/voice/arisu.mp3" data-audio="blue"></audio>
+      <audio src="./assets/voice/iroha.mp3" data-audio="red"></audio>
+      <audio src="./assets/voice/izuna.mp3" data-audio="green"></audio>
+
+      <audio src="./assets/audio/correct.mp3" data-audio="correct"></audio>
+      <audio src="./assets/audio/wrong.mp3" data-audio="wrong"></audio>
+
+      <audio src="./assets/audio/bgm.mp3" data-audio="bgm" loop></audio>
+    </div>
+
+    <script src="./lib/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+    <script src="./src/main.js" type="module"></script>
+  </body>
+</html>
